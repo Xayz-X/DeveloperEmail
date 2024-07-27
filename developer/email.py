@@ -6,10 +6,11 @@ from typing import Optional, List, Dict
 from .error import EmailException
 from .models import CreateEmail, EmailIds, ViewEmail
 
-__all__ = ['DeveloperEmail']
+__all__ = ["DeveloperEmail"]
 
 
 class DeveloperEmail:
+    __slots__ = ("base_url", "session")
     """
     Initialize the DeveloperEmail class.
 
@@ -23,7 +24,7 @@ class DeveloperEmail:
 
     def __init__(
         self, version: str = "v1", session: Optional[aiohttp.ClientSession] = None
-    ):
+    ) -> None:
         self.base_url = f"https://www.developermail.com/api/{version}"
         self.session = session or aiohttp.ClientSession()
 
@@ -40,7 +41,6 @@ class DeveloperEmail:
 
         if not self.session:
             await DeveloperEmail.new_session
-
 
         for attempt in range(attempts):
             try:
@@ -205,14 +205,14 @@ class DeveloperEmail:
     async def new_session(self) -> aiohttp.ClientSession:
         """
         A property method to manage the aiohttp ClientSession.
-    
+
         This method ensures that a ClientSession is created when it is accessed for the first time.
         If a ClientSession already exists, it is returned without creating a new one.
-    
+
         Parameters:
         -----------
         None
-    
+
         Returns:
         --------
         aiohttp.ClientSession
@@ -221,5 +221,5 @@ class DeveloperEmail:
         """
         if not self.session:
             self.session = aiohttp.ClientSession()
-    
+
         return self.session
